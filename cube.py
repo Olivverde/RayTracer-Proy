@@ -4,38 +4,38 @@ from sphere import *
 
 class Cube(object):
   def __init__(self, position, size, material):
-    halfSize = size / 2
+    midWay = size / 2
     self.position = position
     self.size = size
     self.material = material
-    self.planes = [
-      Plane(sum(position, V3(halfSize,0,0)), V3(1,0,0), material),
-      Plane(sum(position, V3(-halfSize,0,0)), V3(-1,0,0), material),
-      Plane(sum(position, V3(0,halfSize,0)), V3(0,1,0), material),
-      Plane(sum(position, V3(0,-halfSize,0)), V3(0,-1,0), material),
-      Plane(sum(position, V3(0,0,halfSize)), V3(0,0,1), material),
-      Plane(sum(position, V3(0,0,-halfSize)), V3(0,0,-1), material),
+    self.structure = [
+      Plane(sum(position, V3(midWay,0,0)), V3(1,0,0), material),
+      Plane(sum(position, V3(-midWay,0,0)), V3(-1,0,0), material),
+      Plane(sum(position, V3(0,midWay,0)), V3(0,1,0), material),
+      Plane(sum(position, V3(0,-midWay,0)), V3(0,-1,0), material),
+      Plane(sum(position, V3(0,0,midWay)), V3(0,0,1), material),
+      Plane(sum(position, V3(0,0,-midWay)), V3(0,0,-1), material),
       ]
 
   def ray_intersect(self, origin, direction):
     epsilon = 0.001
-    minimum = [0, 0, 0]
-    maximum = [0, 0, 0]
+    minn = [0, 0, 0]
+    maxx = [0, 0, 0]
 
     for i in range(3):
-      minimum[i] = self.position[i] - (epsilon + self.size / 2)
-      maximum[i] = self.position[i] + (epsilon + self.size / 2)
+      minn[i] = self.position[i] - (epsilon + self.size / 2)
+      maxx[i] = self.position[i] + (epsilon + self.size / 2)
 
     t = float('inf')
     intersect = None
 
-    for plane in self.planes:
+    for plane in self.structure:
       plane_intersect = plane.ray_intersect(origin, direction)
 
       if plane_intersect is not None:
-        if plane_intersect.point[0] >= minimum[0] and plane_intersect.point[0] <= maximum[0]:
-          if plane_intersect.point[1] >= minimum[1] and plane_intersect.point[1] <= maximum[1]:
-            if plane_intersect.point[2] >= minimum[2] and plane_intersect.point[2] <= maximum[2]:
+        if plane_intersect.point[0] >= minn[0] and plane_intersect.point[0] <= maxx[0]:
+          if plane_intersect.point[1] >= minn[1] and plane_intersect.point[1] <= maxx[1]:
+            if plane_intersect.point[2] >= minn[2] and plane_intersect.point[2] <= maxx[2]:
               if plane_intersect.distance < t:
                 t = plane_intersect.distance
                 intersect = plane_intersect
