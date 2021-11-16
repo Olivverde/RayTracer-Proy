@@ -3,41 +3,27 @@ from sphere import *
 from math import pi, acos, atan2
 
 class Plane(object):
-  def __init__(self, y, material, limits):
-    self.y = y
+  def __init__(self, position, normal, material):
+    self.position = position
+    self.normal = norm(normal)
     self.material = material
-    self.limits = limits
-
-  def ray_intersect_test(self, orig, direction):
-    d = -(orig.y + self.y) / direction.y
-    pt = sum(orig, mul(direction, d))
-
-    if d <= 0 or abs(pt.x) > self.limits[0] or pt.z > self.limits[1] or pt.z < self.limits[2]:
-      return None
-
-    normal = V3(0, 1, 0)
-
-    return Intersect(
-      distance=d,
-      point=pt,
-      normal=normal
-    )
-
   def ray_intersect(self, orig, direction):
-    d = -(orig.y + self.y) / direction.y
-    pt = sum(orig, mul(direction, d))
+    denom = dot(direction, self.normal)
 
-    if d <= 0 or abs(pt.x) > 5 or pt.z > -5 or pt.z < -10:
-      return None
+    if abs(denom) > 0.0001:
+      d = dot(self.normal, sub(self.position, orig)) / denom
+      if d > 0:
+        pt = sum(orig, mul(direction, d))
 
-    normal = V3(0, 1, 0)
+        
+        return Intersect(
+          distance = d,
+          point = pt,
+          normal = self.normal
+        )
 
-    return Intersect(
-      distance=d,
-      point=pt,
-      normal=normal
-    )
-
+    return None
+  
 import mmap
 import numpy
 

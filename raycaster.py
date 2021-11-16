@@ -2,6 +2,7 @@ from lib import *
 from sphere import *
 from plane import *
 from math import pi, tan
+from cube import *
 
 BLACK = color(0, 0, 0)
 WHITE = color(255, 255, 255)
@@ -35,7 +36,7 @@ class Raytracer(object):
       with Image(filename=filename) as image:
         display(image)
     except ImportError:
-      pass  # do nothing if no wand is installed
+      pass  
 
   def point(self, x, y, c = None):
     try:
@@ -46,7 +47,7 @@ class Raytracer(object):
   def cast_ray(self, orig, direction, recursion = 0):
     material, intersect = self.scene_intersect(orig, direction)
 
-    if material is None or recursion >= MAX_RECURSION_DEPTH:  # break recursion of reflections after n iterations
+    if material is None or recursion >= MAX_RECURSION_DEPTH:  
       if self.envmap:
         return self.envmap.get_color(direction)
       return self.background_color
@@ -118,31 +119,46 @@ class Raytracer(object):
         self.pixels[y][x] = self.cast_ray(V3(0,0,0), direction)
 
 
-ivory = Material(diffuse=color(255, 255, 200), albedo=(0.6, 0.3, 0.1, 0), spec=50)
-rubber = Material(diffuse=color(80, 0, 0), albedo=(0.9, 0.1, 0, 0, 0), spec=10)
-mirror = Material(diffuse=color(255, 255, 255), albedo=(0, 10, 0.8, 0), spec=1425)
-glass = Material(diffuse=color(150, 180, 200), albedo=(0, 0.5, 0.1, 0.8), spec=125, refractive_index=1.5)
-grass = Material(diffuse=color(116, 163, 50))
+water = Material(diffuse=color(78, 106, 138), albedo=(0.6, 0.3, 0.1, 0), spec=50, refractive_index=1.5)
+grass = Material(diffuse=color(118, 164, 54), albedo=(0.9, 0.1, 0, 0, 0), spec=50)
+trunk = Material(diffuse=color(197, 178, 146), albedo=(0.9, 0.1, 0, 0, 0), spec=50)
+leaves = Material(diffuse=color(60, 107, 19), albedo=(0.9, 0.1, 0, 0, 0), spec=50)
+leaves_2 = Material(diffuse=color(24, 38, 19), albedo=(0.9, 0.1, 0, 0, 0), spec=50)
 
-r = Raytracer(1000, 1000)
+cloud = Material(diffuse=color(255, 255, 255), albedo=(0.9, 0.1, 0, 0, 0), spec=50)
+sunset = Material(diffuse=color(255,247,7), albedo=(0.9, 0.1, 0, 0, 0), spec=50)
+sunset2 = Material(diffuse=color(235,119,37), albedo=(0.9, 0.1, 0, 0, 0), spec=50)
+
+mirror = Material(diffuse=color(255, 255, 255), albedo=(0, 10, 0.8, 0), spec=1425)
+
+sunbathingChair = Material(diffuse=color(240, 178, 122), albedo=(0.9, 0.1, 0, 0, 0), spec=50)
+
+
+r = Raytracer(1000, 600)
 
 r.light = Light(
-  position=V3(-20, 10, 20),
-  intensity=1.5
+  position=V3(-15, 10, 20),
+  intensity=2
 )
 
-r.background_color = color(50, 50, 200)
+r.background_color = color(95, 167, 244)
 
+# lado, altura, atrás
 r.scene = [
-  #Sphere(V3(0, 0, -5), 0.5, glass),
-  #Sphere(V3(1, 1, -8), 1.7, rubber),
-  #Sphere(V3(-3, 3, -10), 2, mirror),
-  Plane(1, grass, [2,-1,-2]),
-  Plane(1, rubber, [1,-5,-6])
- 
+  Cube(V3(-0.5, -2.1, -1), 3, grass), #OK
+  Cube(V3(-1.5, -2.1, -2), 3, grass), #OK
+  Cube(V3(-2, -2.1, -5), 3, grass), #OK
+  Cube(V3(-5, -2.1, -5), 3, grass), #OK
+  Plane( V3(2,-2,-2),V3(0,1,0), water), #OK
+  Cube(V3(0.6, -0.5, -2), 0.35, trunk), #OK
+  Cube(V3(0.6, -0.2, -2), 0.35, trunk), #OK
+  Cube(V3(0.6, 0.1, -2), 0.35, trunk), #OK
+  Cube(V3(0.45, 0.7, -2), 1, leaves), #OK
+  Cube(V3(0.65, 0.7, -2.2), 1, leaves_2),
 ]
 
-r.envmap = Envmap('./envmap.bmp')
+
+r.envmap = None
 
 r.render()
-r.write('out.bmp')
+r.write('output.bmp')
