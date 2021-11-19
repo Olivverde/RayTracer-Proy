@@ -119,25 +119,19 @@ class Raytracer(object):
         self.pixels[y][x] = self.cast_ray(V3(0,0,0), direction)
 
 
-water = Material(diffuse=color(78, 106, 138), albedo=(0.6, 0.3, 0.1, 0), spec=50, refractive_index=1.5)
+water = Material(diffuse=color(35, 177, 209), albedo=(0.6, 0.3, 0.1, 0), spec=50, refractive_index=1.5)
 grass = Material(diffuse=color(118, 164, 54), albedo=(0.9, 0.1, 0, 0, 0), spec=50)
 trunk = Material(diffuse=color(197, 178, 146), albedo=(0.9, 0.1, 0, 0, 0), spec=50)
 leaves = Material(diffuse=color(60, 107, 19), albedo=(0.9, 0.1, 0, 0, 0), spec=50)
 leaves_2 = Material(diffuse=color(24, 38, 19), albedo=(0.9, 0.1, 0, 0, 0), spec=50)
-
 cloud = Material(diffuse=color(255, 255, 255), albedo=(0.9, 0.1, 0, 0, 0), spec=50)
-sunset = Material(diffuse=color(255,247,7), albedo=(0.9, 0.1, 0, 0, 0), spec=50)
-sunset2 = Material(diffuse=color(235,119,37), albedo=(0.9, 0.1, 0, 0, 0), spec=50)
-
 mirror = Material(diffuse=color(255, 255, 255), albedo=(0, 10, 0.8, 0), spec=1425)
-
-sunbathingChair = Material(diffuse=color(240, 178, 122), albedo=(0.9, 0.1, 0, 0, 0), spec=50)
 
 
 r = Raytracer(1000, 600)
 
 r.light = Light(
-  position=V3(-15, 10, 20),
+  position=V3(-15, 5, 20),
   intensity=2
 )
 
@@ -149,7 +143,19 @@ r.scene = [
   Cube(V3(-1.5, -2.1, -2), 3, grass), #OK
   Cube(V3(-2, -2.1, -5), 3, grass), #OK
   Cube(V3(-5, -2.1, -5), 3, grass), #OK
-  Plane( V3(2,-2,-2),V3(0,1,0), water), #OK
+  Cube(V3(-4.5, -2.1, -8), 3, grass),
+  Cube(V3(-7.5, -2.1, -8), 3, grass),
+  Cube(V3(-1.5, -2.1, -11), 3, grass),
+  Cube(V3(-4.5, -2.1, -11), 3, grass),
+  Cube(V3(-7.5, -2.1, -11), 3, grass),
+  Cube(V3(-1.5, -0.5, -11), 0.35, trunk),
+  Cube(V3(-1.5, -0.2, -11), 0.35, trunk),
+  Cube(V3(-1.5, 0.1, -11), 0.35, trunk),
+  Cube(V3(-1.75, 0.7, -11), 1, leaves),
+  Cube(V3(-1, 0.7, -11), 1, leaves),
+  Cube(V3(-1.5, 0.9, -11.5), 1, leaves),
+  Cube(V3(2,-5,-2),8, water), #OK
+  Cube(V3(4, 1, -6), 0.5, cloud),
   Cube(V3(0.6, -0.5, -2), 0.35, trunk), #OK
   Cube(V3(0.6, -0.2, -2), 0.35, trunk), #OK
   Cube(V3(0.6, 0.1, -2), 0.35, trunk), #OK
