@@ -26,18 +26,6 @@ class Raytracer(object):
   def write(self, filename):
     writebmp(filename, self.width, self.height, self.pixels)
 
-  def display(self, filename='out.bmp'):
-    self.write(filename)
-
-    try:
-      from wand.image import Image
-      from wand.display import display
-
-      with Image(filename=filename) as image:
-        display(image)
-    except ImportError:
-      pass  
-
   def point(self, x, y, c = None):
     try:
       self.pixels[y][x] = c or self.current_color
@@ -51,6 +39,7 @@ class Raytracer(object):
       if self.envmap:
         return self.envmap.get_color(direction)
       return self.background_color
+      
 
     offset_normal = mul(intersect.normal, 1.1)
 
@@ -138,9 +127,18 @@ r.light = Light(
 
 
 r.background_color = color(95, 167, 244)
-
 # lado, altura, atrás
+"""
+"""
 r.scene = [
+  Cube(V3(1.5, -2.1, -11), 3, sand),
+  Cube(V3(4.5, -2.1, -11), 3, sand),
+  Cube(V3(1.5, -0.5, -12), 0.35, trunk_2),
+  Cube(V3(1.5, -0.2, -12), 0.35, trunk_2),
+  Cube(V3(1.5, 0.1, -12), 0.35, trunk_2),
+  Cube(V3(1.7, 0.7, -12), 1, leaves),
+  Cube(V3(1.45, 0.7, -12.3), 1, leaves_2),
+  Cube(V3(1.5, 1.3, -12), 0.5, leaves),
   Cube(V3(-0.5, -2.1, -1), 3, grass), #OK
   Cube(V3(-1.5, -2.1, -2), 3, grass), #OK
   Cube(V3(-2, -2.1, -5), 3, grass), #OK
@@ -156,25 +154,24 @@ r.scene = [
   Cube(V3(-1.5, -2.1, -11), 3, grass),
   Cube(V3(-4.5, -2.1, -11), 3, grass),
   Cube(V3(-7.5, -2.1, -11), 3, grass),
-  Cube(V3(1.5, -2.1, -11), 3, sand),
-  Cube(V3(4.5, -2.1, -11), 3, sand),
   Cube(V3(-1.5, -0.5, -11), 0.35, trunk),
   Cube(V3(-1.5, -0.2, -11), 0.35, trunk),
   Cube(V3(-1.5, 0.1, -11), 0.35, trunk),
   Cube(V3(-1.75, 0.7, -11), 1, leaves),
   Cube(V3(-1, 0.7, -11), 1, leaves),
   Cube(V3(-1.5, 0.9, -11.5), 1, leaves),
-  Cube(V3(2,-5,-7),8, water), #OK
-  Cube(V3(4, 1.5, -5), 0.5, cloud),
+  Cube(V3(2,-4.8,-7),8, water), #OK
+  Cube(V3(3, 1.5, -5), 0.5, cloud),
   Cube(V3(0.6, -0.5, -2), 0.35, trunk), #OK
   Cube(V3(0.6, -0.2, -2), 0.35, trunk), #OK
   Cube(V3(0.6, 0.1, -2), 0.35, trunk), #OK
   Cube(V3(0.45, 0.7, -2), 1, leaves), #OK
   Cube(V3(0.65, 0.7, -2.2), 1, leaves_2),
+  Sphere(V3(-2, 1, -4), 0.85, mirror)
+  
 ]
 
 
-r.envmap = None
-
+r.envmap = Envmap('./envmap.bmp')
 r.render()
 r.write('output.bmp')

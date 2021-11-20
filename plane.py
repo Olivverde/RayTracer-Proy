@@ -44,8 +44,8 @@ class Envmap(object):
         img.close()
 
     def get_color(self, direction):
-      width = 2000
-      height = 1000
+      width = 1600
+      height = 800
       direction = norm(direction)
 
       x = int((atan2(direction.z, direction.x) / (2 * pi) + 0.5) * width)
